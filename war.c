@@ -1,7 +1,7 @@
 // ============================================================================
 //         PROJETO WAR ESTRUTURADO - DESAFIO DE CÓDIGO
 // ============================================================================
-//        
+//
 // ============================================================================
 //
 // OBJETIVOS:
@@ -16,11 +16,25 @@
 
 // Inclusão das bibliotecas padrão necessárias para entrada/saída, alocação de memória, manipulação de strings e tempo.
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 // --- Constantes Globais ---
 // Definem valores fixos para o número de territórios, missões e tamanho máximo de strings, facilitando a manutenção.
 
+#define MAX_TERRITORIOS 5
+#define TAM_STRING 50
+
 // --- Estrutura de Dados ---
 // Define a estrutura para um território, contendo seu nome, a cor do exército que o domina e o número de tropas.
+
+struct Territorio
+{
+    char nome[30];
+    char cor[10];
+    int tropas;
+};
 
 // --- Protótipos das Funções ---
 // Declarações antecipadas de todas as funções que serão usadas no programa, organizadas por categoria.
@@ -31,7 +45,99 @@
 
 // --- Função Principal (main) ---
 // Função principal que orquestra o fluxo do jogo, chamando as outras funções em ordem.
-int main() {
+int main()
+{
+    struct Territorio territorios[MAX_TERRITORIOS];
+    int totalTerritorios = 0;
+    int opcao;
+
+    do
+    {
+        printf("--------------------------\n");
+        printf("-----------WAR------------\n");
+        printf("--------------------------\n");
+        printf("\n");
+        printf("1 - Cadastrar novo territorio\n");
+        printf("2 - Listar todos os territorios\n");
+        printf("0 - Sair\n");
+        printf("Escolha uma opcao: \n");
+
+        scanf("%d", &opcao);
+        limparBufferEntrada();
+
+        switch (opcao)
+        {
+        case 1:
+            printf("--- Cadastro de novo territorio ---\n\n");
+
+            if (totalTerritorios < MAX_TERRITORIOS)
+            {
+                printf("Digite o nome do territorio: ");
+                fgets(territorios[totalTerritorios].nome, TAM_STRING, stdin);
+
+                printf("Digite a cor da tropa: ");
+                fgets(territorios[totalTerritorios].cor, TAM_STRING, stdin);
+
+                territorios[totalTerritorios].nome[strcspn(territorios[totalTerritorios].nome, "\n")] = '\0';
+                territorios[totalTerritorios].cor[strcspn(territorios[totalTerritorios].cor, "\n")] = '\0';
+
+                printf("Digite o numero de tropas: ");
+                scanf("%d", &territorios[totalTerritorios].tropas);
+                limparBufferEntrada();
+
+                printf("\n Territorio cadastrado com sucesso!\n");
+                printf("-------------------------\n");
+                printf("Territorio %d\n", totalTerritorios + 1);
+                printf("Nome: %s\n", territorios[totalTerritorios].nome);
+                printf("Cor: %s\n", territorios[totalTerritorios].cor);
+                printf("Quantidade de tropas: %d\n", territorios[totalTerritorios].tropas);
+                totalTerritorios++;
+            }
+            else
+            {
+                printf("Territorios cheios! Nao e possível cadastrar mais territorios.\n");
+            }
+            printf("\nPressione Enter para continuar...");
+            getchar();
+            break;
+
+        case 2:
+
+            printf("--- Lista de territorios cadastrados ---\n\n");
+
+            if (totalTerritorios == 0)
+            {
+                printf("Nenhum territorio cadastrado ainda.\n");
+            }
+            else
+            {
+                for (int i = 0; i < totalTerritorios; i++)
+                {
+                    printf("-------------------------\n");
+                    printf("Territorio %d\n", i + 1);
+                    printf("Nome: %s\n", territorios[i].nome);
+                    printf("Cor: %s\n", territorios[i].cor);
+                    printf("Tropas: %d\n", territorios[i].tropas);
+                }
+                printf("-------------------------\n");
+            }
+
+            printf("\nPressione Enter para continuar...");
+            getchar();
+            break;
+
+        case 0:
+            printf("Saindo do sistema");
+            break;
+
+        default:
+            printf("\nOpção invalida! Tente novamente.\n");
+            printf("\nPressione Enter para continuar...");
+            getchar();
+            break;
+        }
+    } while (opcao != 0);
+
     // 1. Configuração Inicial (Setup):
     // - Define o locale para português.
     // - Inicializa a semente para geração de números aleatórios com base no tempo atual.
@@ -96,3 +202,10 @@ int main() {
 
 // limparBufferEntrada():
 // Função utilitária para limpar o buffer de entrada do teclado (stdin), evitando problemas com leituras consecutivas de scanf e getchar.
+
+void limparBufferEntrada()
+{
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF)
+        ;
+}
